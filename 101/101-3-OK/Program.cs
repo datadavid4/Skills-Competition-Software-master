@@ -10,7 +10,7 @@ namespace _101_3
     {
         static void Main(string[] args)
         {
-            float r = int.Parse(getInput("請輸入徑向距離(r) = "));
+            double r = double.Parse(getInput("請輸入徑向距離(r) = "));
             int n = int.Parse(getInput("請輸入徑向多項式的次數(n) = "));
 
 
@@ -27,21 +27,31 @@ namespace _101_3
             Console.Read();
         }
 
-        static int getAns(float r, int n, int m)
+        static double getAns(double r, int n, int m)
         {
-            int result = 1;
+            double result = 0;
 
-            for (int s = 0; s <= n - Math.Abs(m); s++)
+            double temp0, temp1, temp2, temp3, temp4;
+
+            int times = (n - Math.Abs(m)) / 2;
+            for (int s = 0; s <= times; s++)
             {
+                temp0 = getFactorial(n - s);
 
+                temp1 = getFactorial(s);
+                temp2 = getFactorial((n + Math.Abs(m)) / 2 - s);
+                temp3 = getFactorial((n - Math.Abs(m)) / 2 - s);
+
+                temp4 = Math.Pow(r, n - 2 * s);
+
+                result += Math.Pow(-1, s) * (temp0 / (temp1 * temp2 * temp3)) * temp4;
             }
-
 
             return result;
         }
         static int getFactorial(int n)
         {
-            if (n == 1) return n;
+            if (n <= 1) return 1;
             else return n * getFactorial(n - 1);
         }
         static string getInput(string title)
