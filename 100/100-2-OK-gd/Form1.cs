@@ -24,18 +24,19 @@ namespace _100_2
             Array.Reverse(ip_arr);
             int maskSize = int.Parse(temp[1]);
 
-            int ip = 0, network = 0, broadcast = 0;
+            int ip = 0, mask = 0, network = 0, broadcast = 0;
             int saveRange = 32 - maskSize;
 
-            // 先轉為32 bit，用|= 跟+=都可以，因為位移後沒有重疊到
+            // 先轉為32 bit
             for (int i = 0; i < ip_arr.Length; i++) ip |= ip_arr[i] << (i * 8);
+            // 計算遮罩
+            mask = Int32.MaxValue << saveRange;
 
             // 計算網路位置
-            network = ip >> saveRange << saveRange;
+            network = ip & mask;
 
             // 計算廣播位置
-            for (int i = 0; i < saveRange; i++) broadcast |= (1 << i);
-            broadcast |= network;
+            broadcast = network | (~mask);
 
             //  計算IP數量
             int num = (int)Math.Pow(2, 32 - maskSize) - 2;
