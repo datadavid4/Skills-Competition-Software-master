@@ -65,10 +65,10 @@ namespace _101_5
 
             long startTime = Environment.TickCount;
             List<Node> path = solve();
-            long times = Environment.TickCount - startTime;
+            double times = (Environment.TickCount - startTime) / 1000.0;
 
             if (path != null)
-                labResult.Text = $"Steps : {path.Count}\nTime : {times / 1000.0:#.##}s";
+                labResult.Text = $"Steps : {path.Count}\nTime : {times:0.##}s";
             else
                 labResult.Text = $"無解";
         }
@@ -80,10 +80,10 @@ namespace _101_5
 
             long startTime = Environment.TickCount;
             List<Node> path = solve();
-            long times = Environment.TickCount - startTime;
+            double times = (Environment.TickCount - startTime) / 1000.0;
 
             if (path != null)
-                labResult.Text = $"steps : {path.Count}\nTimes : {times / 1000.0:#.##}s";
+                labResult.Text = $"Steps : {path.Count}\nTime : {times:0.##}s";
             else
             {
                 labResult.Text = $"無解";
@@ -113,6 +113,7 @@ namespace _101_5
                     timer.Stop();
                     int index = Array.IndexOf<byte>(goal, 0);
                     tb[0][index].Text = "0";
+                    labCountDown.Text += "\n完成";
                     return;
                 }
             };

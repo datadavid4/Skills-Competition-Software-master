@@ -18,3 +18,13 @@ C:\Users\david\Desktop\101-5\obj\Debug\101-5.csproj.GenerateResource.Cache
 C:\Users\david\Desktop\101-5\obj\Debug\101-5.csproj.CoreCompileInputs.cache
 C:\Users\david\Desktop\101-5\obj\Debug\101-5.exe
 C:\Users\david\Desktop\101-5\obj\Debug\101-5.pdb
+C:\Users\david\Desktop\101-5-OK\bin\Debug\101-5.exe.config
+C:\Users\david\Desktop\101-5-OK\bin\Debug\101-5.exe
+C:\Users\david\Desktop\101-5-OK\bin\Debug\101-5.pdb
+C:\Users\david\Desktop\101-5-OK\obj\Debug\101-5.csprojResolveAssemblyReference.cache
+C:\Users\david\Desktop\101-5-OK\obj\Debug\_101_5.Form1.resources
+C:\Users\david\Desktop\101-5-OK\obj\Debug\_101_5.Properties.Resources.resources
+C:\Users\david\Desktop\101-5-OK\obj\Debug\101-5.csproj.GenerateResource.Cache
+C:\Users\david\Desktop\101-5-OK\obj\Debug\101-5.csproj.CoreCompileInputs.cache
+C:\Users\david\Desktop\101-5-OK\obj\Debug\101-5.exe
+C:\Users\david\Desktop\101-5-OK\obj\Debug\101-5.pdb
