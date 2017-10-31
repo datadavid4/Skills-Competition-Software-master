@@ -50,7 +50,7 @@ namespace _101_5
         private void button1_Click(object sender, EventArgs e)
         {
             int[] arr = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 0 };
-
+            
             for (int i = 0; i < 100; i++)
                 swap(ref arr[ran.Next(0, 9)], ref arr[ran.Next(0, 9)]);
 
@@ -64,7 +64,7 @@ namespace _101_5
             this.Refresh();
 
             long startTime = Environment.TickCount;
-            List<Node> path = solve();
+            List<Node> path = Solve(TextBoxToArr(tb[0]), TextBoxToArr(tb[1]));
             double times = (Environment.TickCount - startTime) / 1000.0;
 
             if (path != null)
@@ -79,7 +79,7 @@ namespace _101_5
             this.Refresh();
 
             long startTime = Environment.TickCount;
-            List<Node> path = solve();
+            List<Node> path = Solve(TextBoxToArr(tb[0]), TextBoxToArr(tb[1]));
             double times = (Environment.TickCount - startTime) / 1000.0;
 
             if (path != null)
@@ -118,102 +118,101 @@ namespace _101_5
                 }
             };
         }
-
-        List<Node> solve()
+        byte[] TextBoxToArr(TextBox[] t)
         {
-            source = new byte[9];
-            goal = new byte[9];
-
+            byte[] arr = new byte[t.Length];
             for (int i = 0; i < 9; i++)
-            {
-                source[i] = byte.Parse(tb[0][i].Text);
-                goal[i] = byte.Parse(tb[1][i].Text);
-            }
+                arr[i] = byte.Parse(t[i].Text);
+            return arr;
+        }
 
+        // 傳入原本的版面和目標版面，回傳最短路徑
+        List<Node> Solve(byte[] source, byte[] goal)
+        {
             Queue<Node> queue = new Queue<Node>();
-            SortedList<int, bool> book = new SortedList<int, bool>();// 儲存已走過的路徑，防止往回走
-            // 注意用正常List執行8,6,4,0,7,2,5,1,3速度是10秒，用SortedList卻是3秒 ???
-            Queue<Node> nextPush;
-
+            SortedList<int, bool> book = new SortedList<int, bool>();// 儲存已走過的路徑，防止走回頭路
 
             Node end = new Node(goal, null);// 終點
-            int endInt = end.ToInt();
-            Node now = new Node(source, null);// 起點
+            Node start = new Node(source, null);// 起點
 
-            queue.Enqueue(now);// 推入起點
-            book.Add(now.ToInt(), true);// 標示起點已走過
+            queue.Enqueue(start);// 推入起點
+            book.Add(start.ToSequence(), true);// 標示起點已走過
 
+            int endStatus = end.ToSequence();
             while (queue.Count > 0)
             {
-                now = queue.Dequeue();// 當前搜索狀態
-                if (now.ToInt() == endInt)
-                {
-                    // 回朔路徑
-                    List<Node> path = new List<Node>();
-                    while (now.father != null)
-                    {
-                        path.Add(now);
-                        now = now.father;
-                    }
-                    path.Reverse();
-                    return path;
-                }
+                Node now = queue.Dequeue();// 取得當前搜索狀態，並移出佇列
+
+                // 如果抵達終點，那就輸出路徑
+                if (now.ToSequence() == endStatus)
+                    return PathTrace(now);
 
                 // 取得能走的位置
-                nextPush = GetNext(now);
-
-                // 加入Queue繼續搜索
-                foreach (var item in nextPush)
+                List<Node> nextPath = GetNext(now);                                
+                foreach (var path in nextPath)
                 {
-                    int sign = item.ToInt();
+                    int sign = path.ToSequence();
                     // 判斷當前狀態是否走過了
                     if (!book.Keys.Contains(sign))
                     {
-                        queue.Enqueue(item);
+                        queue.Enqueue(path);
                         book.Add(sign, true);
                     }
                 }
             }
 
+            // 如果窮舉完都沒找到，代表無解
             return null;
         }
-        Queue<Node> GetNext(Node now)// 傳入當前版面，回傳0可移動的位置
+        List<Node> GetNext(Node now)// 傳入當前版面，回傳0所有移動後的狀態
         {
             int index = Array.IndexOf<byte>(now.status, 0);
             int col = index % 3;
             int row = index / 3;
 
-            Queue<Node> nextPush = new Queue<Node>();
+            List<Node> nextPush = new List<Node>();
             byte[] next;
 
             if (row != 0) // Top
             {
                 next = (byte[])now.status.Clone();
                 swap(ref next[index], ref next[index - 3]);
-                nextPush.Enqueue(new Node(next, now));
+                nextPush.Add(new Node(next, now));
             }
 
             if (col != 2) // Right
             {
                 next = (byte[])now.status.Clone();
                 swap(ref next[index], ref next[index + 1]);
-                nextPush.Enqueue(new Node(next, now));
+                nextPush.Add(new Node(next, now));
             }
 
             if (row != 2) // Bottom
             {
                 next = (byte[])now.status.Clone();
                 swap(ref next[index], ref next[index + 3]);
-                nextPush.Enqueue(new Node(next, now));
+                nextPush.Add(new Node(next, now));
             }
 
             if (col != 0) // Left
             {
                 next = (byte[])now.status.Clone();
                 swap(ref next[index], ref next[index - 1]);
-                nextPush.Enqueue(new Node(next, now));
+                nextPush.Add(new Node(next, now));
             }
             return nextPush;
+        }
+        List<Node> PathTrace(Node now)
+        {
+            // 回朔路徑
+            List<Node> path = new List<Node>();
+            while (now.father != null)
+            {
+                path.Add(now);
+                now = now.father;
+            }
+            path.Reverse();
+            return path;
         }
 
         void swap<T>(ref T a, ref T b)
@@ -234,7 +233,7 @@ namespace _101_5
             this.father = father;
         }
 
-        public int ToInt()// 把陣列轉換成數字序列，較好比對
+        public int ToSequence()// 把陣列轉換成數字序列，較好比對
         {
             int result = 0;
             for (int i = 0; i < status.Length; i++)
