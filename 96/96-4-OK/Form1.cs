@@ -51,18 +51,12 @@ namespace _96_4
                     case "*":
                     case "/":
                         int nowPri = getPriority(now);
-                        int lastPre = 0;
-                        if (stack.Count > 0) lastPre = getPriority(stack.Peek());
-                        // 比較當前運算子優先度是否比較大，比較大就堆入，這樣輸出的時候就是優先大的在前面
-                        if (nowPri > lastPre)
-                            stack.Push(now);
-                        else
+                        // 如果堆疊中的優先比較高，先輸出
+                        while (stack.Count > 0 && getPriority(stack.Peek()) >= nowPri)
                         {
-                            // 如果優先度比較小，像是last = *、now = +，這是後就先輸出*
-                            while (stack.Count > 0)
-                                result += stack.Pop();
-                            stack.Push(now);
+                            result += stack.Pop();
                         }
+                        stack.Push(now);
                         break;
 
                     // 數字
